@@ -1,0 +1,14 @@
+- Chapter 2: Pygame Basics
+        We covered basic functions and learned what modules are.
+        What GUI and CLI means and how they work and they cannot display graphics.
+        How to import pygame and its system.
+        We learnt about Game loops and game states. They handle events, draws and updates the game state.
+        Event objects (pygame.event.Event)
+        Coordinates and how we might use them.
+        Colors and transparent colours (RGB, DISPLAYSURF, pygame.Color)
+        Rect Objects and how to draw shapes.
+        Primitive Drawing functions. To draw ellipses, circles or lines.
+        pygame.draw functions.
+        Pixel Array objects and how to use them.
+        Animation and how to update display.
+
