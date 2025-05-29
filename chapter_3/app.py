@@ -62,7 +62,6 @@ def generate_board_data(ROW_NUMBER, COL_NUMBER):
     random.shuffle(ran_shape_list)
     global BOARD_DATA
     BOARD_DATA = ran_shape_list
-    print(BOARD_DATA)
 
 def check_unique_shape_colour(new_shape, ran_shape_list):
     for x in range(0, len(ran_shape_list)):
@@ -175,7 +174,6 @@ while True:
             pos = event.pos
             row_index = int(pos[1] / BOX_H)
             col_index = int(pos[0] / BOX_W)
-            print( f'Row: {row_index} Col: {col_index}')
             # HMRK
             # show the shape
             show_shape(row_index, col_index)
