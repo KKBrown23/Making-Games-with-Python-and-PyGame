@@ -1,0 +1,25 @@
+Feature:
+    - Check if the user has made a correct combination of two 
+      identical shapes.
+        - Input: 
+                Event: User clicks a shape
+                    Target: click_box
+                    Type: click
+                    Handler: check_combination
+
+        - Calculation:
+                check_combination
+                1. get the clicked_box coordinates (x,y)
+                2. translate the coords into row and colomn 
+                3. show the shape
+                4. check if you have a previous box opened
+                    a. check if they match
+                        a1. leave them opened
+                        a2. add 1 to the solved counter
+                        a3. reset the previous box opened
+                    b. if not 
+                        b1. close the boxes
+                        b2. reset the previous box opened
+                5. If you don't have a previous box 
+                    a. show the shape
+        - Output:
