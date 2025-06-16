@@ -25,6 +25,7 @@ SQUARE = 'square'
 DIAMOND = 'diamond'
 LINES = 'lines'
 OVAL = 'oval'
+match_counter = 0 
 
 COLOUR_LIST = [RED, GRAY, NAVYBLUE, WHITE, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN]
 SHAPE_LIST = [DONUT, SQUARE, DIAMOND, LINES, OVAL]
@@ -126,6 +127,8 @@ def check_shape(row_index, col_index):
         opened_shape_coords = get_coords(OPENED_SHAPE['row_index'], OPENED_SHAPE['col_index'])
         if current_shape['shape'] == OPENED_SHAPE['shape'] and current_shape['colour'] == OPENED_SHAPE['colour']:
             OPENED_SHAPE = None
+            match_counter += 1
+                
         else:
             OPENED_SHAPE = None
             pygame.draw.rect(DISPLAYSURF, 

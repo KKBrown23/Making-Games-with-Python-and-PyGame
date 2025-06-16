@@ -1,0 +1,8 @@
+Initilize the tabel data
+Display the tabel
+
+User clicks one of the buttons
+Check if the number can move (check_left, right, up, down)
+    if the number can move=> change the tabel_data
+                          => slide the number
+                         => check_if_end()
