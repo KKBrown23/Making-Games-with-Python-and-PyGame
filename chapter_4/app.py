@@ -6,23 +6,27 @@ CANVAS_WIDTH = 700
 CANVAS_HEIGHT = 500
 COL_NUMBER = 4
 ROW_NUMBER = 4
-TALE_SIZE = 100
+TALE_SIZE = 95
 
 GRAY = (100, 100, 100)
 NAVYBLUE = ( 60, 60, 100)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
-GREEN = ( 0, 255, 0)
+GREEN = ( 0, 200, 0)
 BLUE = ( 0, 0, 255)
 YELLOW = (255, 255, 0)
 ORANGE = (255, 128, 0)
 PURPLE = (255, 0, 255)
 CYAN = ( 0, 255, 255)
 
-BOARD_DATA = []
+BOARD_DATA = [   [10,3,14,7],
+                 [5,13,1,4],
+                 [2,8,6,15], 
+                 [11,9,0,12]]
 pygame.init()
 DISPLAYSURF = pygame.display.set_mode((CANVAS_WIDTH, CANVAS_HEIGHT))
 pygame.display.set_caption('Sliding Tales')
+BASICFONT = pygame.font.Font('freesansbold.ttf', 20)
 
 def makeText(text, color, bgcolor, top, left):
  # create the Surface and Rect objects for some text.
@@ -36,8 +40,24 @@ main_label = pygame.font.Font('freesansbold.ttf', 32)
 textSurfaceObj = main_label.render('Hello world!', True, GREEN, BLUE)
 textRectObj = textSurfaceObj.get_rect()
 textRectObj.center = (100, 15)
+def draw_board(board_data):
+    pygame.draw.rect(DISPLAYSURF, BLUE, ((150, 50), (400, 400)))
 
-pygame.draw.rect(DISPLAYSURF, BLUE, ((150, 50), (400, 400)))
+    drawing_x = 160
+    drawing_y = 60
+
+    for x in range(0,len(board_data)):   
+        drawing_x = 160 
+        for y in range(0,len(board_data[x])):
+            if(board_data[x][y] != 0):
+                pygame.draw.rect(DISPLAYSURF, GREEN, ((drawing_x, drawing_y), (TALE_SIZE-5,TALE_SIZE-5)))
+                textSurf = BASICFONT.render(str(board_data[x][y]), True, WHITE)
+                textRectObj = textSurf.get_rect()
+                textRectObj.topleft=(drawing_x + (TALE_SIZE/ 4)  , drawing_y + (TALE_SIZE/4) )
+                DISPLAYSURF.blit(textSurf, textRectObj)
+            drawing_x += TALE_SIZE
+        drawing_y += TALE_SIZE
+draw_board(board_data=BOARD_DATA)
 
 
 resetGameSurf, resetGameRect = makeText('Reset', WHITE, GREEN, 560,300)
