@@ -20,6 +20,11 @@ x_position = 45
 speed_x = 1
 y_position = 50
 speed_y = 1
+
+
+def animate(row, column, direction)
+
+
 while True:
     clock.tick(60)
     for event in pygame.event.get():
