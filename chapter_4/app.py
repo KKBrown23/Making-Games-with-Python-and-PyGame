@@ -1,7 +1,9 @@
 import pygame, sys
 from pygame.locals import *
 import random, time
-
+# Homework
+# at the decalartion of the click handler part of the code check if the animation_running variable is true => continue
+# when the animation ends set the variable  animation_running to False
 CANVAS_WIDTH = 700
 CANVAS_HEIGHT = 500
 COL_NUMBER = 4
@@ -19,7 +21,7 @@ YELLOW = (255, 255, 0)
 ORANGE = (255, 128, 0)
 PURPLE = (255, 0, 255)
 CYAN = ( 0, 255, 255)
-
+animation_running = False
 BOARD_DATA = [   [10,3,14,7],
                  [5,0,1,4],
                  [2,8,6,15], 
@@ -73,11 +75,13 @@ direction = None
 tale_to_animate_row = None
 tale_to_animate_column = None
 def animate(row, column, direction):
-    global movement, tale_to_animate_row, tale_to_animate_column
+    global movement, tale_to_animate_row, tale_to_animate_column, animation_running
     if row is None or column is None or direction is None:
         return
+    if row is not None and column is not None and direction is not None:
+        animation_running = True 
     # animation ends -> reseting
-    if movement == TALE_SIZE:
+    if movement > TALE_SIZE:
         if direction == 'DOWN':
             BOARD_DATA[row+1][column] = BOARD_DATA[row][column]
             BOARD_DATA[row][column] = 0
@@ -94,6 +98,7 @@ def animate(row, column, direction):
         tale_to_animate_column = None
         tale_to_animate_row = None
         direction = None
+        animation_running = False
     x_coord = STARTING_X + column * TALE_SIZE
     y_coord = STARTING_Y + row * TALE_SIZE
     if direction == 'DOWN' and movement < TALE_SIZE:
@@ -103,7 +108,7 @@ def animate(row, column, direction):
         textRectObj = textSurf.get_rect()
         textRectObj.topleft=(x_coord + (TALE_SIZE/ 4)  , y_coord + (TALE_SIZE/4) +movement)
         DISPLAYSURF.blit(textSurf, textRectObj)
-        movement += 1
+        movement += 5
     if direction == 'UP' and movement < TALE_SIZE:
 
         pygame.draw.rect(DISPLAYSURF, BLUE, ((x_coord, y_coord),(TALE_SIZE, TALE_SIZE)))
@@ -112,7 +117,7 @@ def animate(row, column, direction):
         textRectObj = textSurf.get_rect()
         textRectObj.topleft=(x_coord + (TALE_SIZE/ 4)  , y_coord + (TALE_SIZE/4) - movement)
         DISPLAYSURF.blit(textSurf, textRectObj)
-        movement += 1
+        movement += 5
     if direction == 'RIGHT' and movement < TALE_SIZE:
 
         pygame.draw.rect(DISPLAYSURF, BLUE, ((x_coord, y_coord),(TALE_SIZE, TALE_SIZE)))
@@ -121,7 +126,7 @@ def animate(row, column, direction):
         textRectObj = textSurf.get_rect()
         textRectObj.topleft=(x_coord + (TALE_SIZE/ 4) + movement , y_coord + (TALE_SIZE/4))
         DISPLAYSURF.blit(textSurf, textRectObj)
-        movement += 1
+        movement += 5
     if direction == 'LEFT' and movement < TALE_SIZE:
 
         pygame.draw.rect(DISPLAYSURF, BLUE, ((x_coord, y_coord),(TALE_SIZE, TALE_SIZE)))
@@ -130,7 +135,7 @@ def animate(row, column, direction):
         textRectObj = textSurf.get_rect()
         textRectObj.topleft=(x_coord + (TALE_SIZE/ 4) - movement , y_coord + (TALE_SIZE/4))
         DISPLAYSURF.blit(textSurf, textRectObj)
-        movement += 1
+        movement += 5
     # Homework if direction is 'UP' substruct the movment from the y_coord
     # add move 'Left'
     # add move 'Right'
@@ -159,6 +164,8 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == MOUSEBUTTONDOWN:
+            if animation_running == True:
+                continue
             pos = event.pos
             movement = 1
             col_index = int((pos[0] - STARTING_X) / TALE_SIZE)
