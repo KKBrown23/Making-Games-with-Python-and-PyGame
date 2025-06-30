@@ -61,10 +61,6 @@ def draw_board(board_data):
             drawing_x += TALE_SIZE
         drawing_y += TALE_SIZE
 draw_board(board_data=BOARD_DATA)
-
-
-resetGameSurf, resetGameRect = makeText('Reset', WHITE, GREEN, 560,300)
-
 newGameSurf, newGameRect = makeText('New Game', WHITE, GREEN, 560,350)
 
 movement = 2
@@ -160,12 +156,53 @@ def check_movement(row, column, board_data):
     if(column + 1 < COL_NUMBER and board_data[row][column+1] == 0):
         return 'RIGHT'
     return None
+
+board_data_list = [
+    [
+        [5, 1, 3, 4],
+        [2, 0, 7, 8],
+        [6, 10, 11, 12],
+        [9, 13, 14, 15]
+    ], 
+    [
+        [1, 2, 3, 4],
+        [5, 6, 0, 8],
+        [9, 10, 7, 12],
+        [13, 14, 11, 15]
+    ],
+    [
+        [1, 0, 3, 4],
+        [2, 5, 7, 8],
+        [6, 10, 11, 12],
+        [9, 13, 14, 15]
+    ],
+    [
+        [5, 1, 3, 4],
+        [2, 7, 8, 0],
+        [6, 10, 11, 12],
+        [9, 13, 14, 15]
+    ],
+    [
+        [5, 1, 2, 3],
+        [9, 6, 7, 4],
+        [13, 10, 11, 8],
+        [0, 14, 15, 12]
+    ]
+]
+
+def reset():
+    global BOARD_DATA
+    # generate new board data
+    random_index = random.randint(0, len(board_data_list))
+    random_board_data = board_data_list[random_index]
+    BOARD_DATA = random_board_data
+    # redraw the board using the draw board function
+    draw_board(BOARD_DATA)
 while True:
     clock.tick(60)
     for event in pygame.event.get():
         DISPLAYSURF.blit(textSurfaceObj, textRectObj)
         DISPLAYSURF.blit(newGameSurf, newGameRect)
-        DISPLAYSURF.blit(resetGameSurf, resetGameRect)
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
@@ -173,6 +210,10 @@ while True:
             if animation_running == True:
                 continue
             pos = event.pos
+            if((pos[0] > 560 and pos[0] <760) and (pos[1] > 350 and pos[1] < 375)  ):
+                reset()
+                continue
+            
             movement = 1
             col_index = int((pos[0] - STARTING_X) / TALE_SIZE)
             row_index = int((pos[1] - STARTING_Y) / TALE_SIZE)
