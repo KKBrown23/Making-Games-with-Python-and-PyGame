@@ -21,9 +21,9 @@ PURPLE = (255, 0, 255)
 CYAN = ( 0, 255, 255)
 
 BOARD_DATA = [   [10,3,14,7],
-                 [5,13,1,4],
+                 [5,0,1,4],
                  [2,8,6,15], 
-                 [11,9,0,12]]
+                 [11,9,13,12]]
 pygame.init()
 clock = pygame.time.Clock()
 
@@ -58,6 +58,7 @@ def draw_board(board_data):
                 textRectObj = textSurf.get_rect()
                 textRectObj.topleft=(drawing_x + (TALE_SIZE/ 4)  , drawing_y + (TALE_SIZE/4) )
                 DISPLAYSURF.blit(textSurf, textRectObj)
+                print(board_data[x][y])
             drawing_x += TALE_SIZE
         drawing_y += TALE_SIZE
 draw_board(board_data=BOARD_DATA)
@@ -72,17 +73,62 @@ direction = None
 tale_to_animate_row = None
 tale_to_animate_column = None
 def animate(row, column, direction):
-    if(not row or not column or not direction):
+    global movement, tale_to_animate_row, tale_to_animate_column
+    if row is None or column is None or direction is None:
         return
-    global movement
-    x_coord = STARTING_X + row * TALE_SIZE
-    y_coord = STARTING_Y + column * TALE_SIZE
+    # animation ends -> reseting
+    if movement == TALE_SIZE:
+        if direction == 'DOWN':
+            BOARD_DATA[row+1][column] = BOARD_DATA[row][column]
+            BOARD_DATA[row][column] = 0
+        if direction == 'UP':
+            BOARD_DATA[row-1][column] = BOARD_DATA[row][column]
+            BOARD_DATA[row][column] = 0
+        if direction == 'LEFT':
+            BOARD_DATA[row][column-1] = BOARD_DATA[row][column]
+            BOARD_DATA[row][column] = 0
+        if direction == 'RIGHT':
+            BOARD_DATA[row][column+1] = BOARD_DATA[row][column]
+            BOARD_DATA[row][column] = 0
+                
+        tale_to_animate_column = None
+        tale_to_animate_row = None
+        direction = None
+    x_coord = STARTING_X + column * TALE_SIZE
+    y_coord = STARTING_Y + row * TALE_SIZE
     if direction == 'DOWN' and movement < TALE_SIZE:
         pygame.draw.rect(DISPLAYSURF, BLUE, ((x_coord, y_coord),(TALE_SIZE, TALE_SIZE)))
         pygame.draw.rect(DISPLAYSURF, GREEN, ((x_coord, y_coord+movement), (TALE_SIZE-5,TALE_SIZE-5)))
         textSurf = BASICFONT.render(str(BOARD_DATA[row][column]), True, WHITE)
         textRectObj = textSurf.get_rect()
         textRectObj.topleft=(x_coord + (TALE_SIZE/ 4)  , y_coord + (TALE_SIZE/4) +movement)
+        DISPLAYSURF.blit(textSurf, textRectObj)
+        movement += 1
+    if direction == 'UP' and movement < TALE_SIZE:
+
+        pygame.draw.rect(DISPLAYSURF, BLUE, ((x_coord, y_coord),(TALE_SIZE, TALE_SIZE)))
+        pygame.draw.rect(DISPLAYSURF, GREEN, ((x_coord, y_coord-movement), (TALE_SIZE-5,TALE_SIZE-5)))
+        textSurf = BASICFONT.render(str(BOARD_DATA[row][column]), True, WHITE)
+        textRectObj = textSurf.get_rect()
+        textRectObj.topleft=(x_coord + (TALE_SIZE/ 4)  , y_coord + (TALE_SIZE/4) - movement)
+        DISPLAYSURF.blit(textSurf, textRectObj)
+        movement += 1
+    if direction == 'RIGHT' and movement < TALE_SIZE:
+
+        pygame.draw.rect(DISPLAYSURF, BLUE, ((x_coord, y_coord),(TALE_SIZE, TALE_SIZE)))
+        pygame.draw.rect(DISPLAYSURF, GREEN, ((x_coord+movement, y_coord), (TALE_SIZE-5,TALE_SIZE-5)))
+        textSurf = BASICFONT.render(str(BOARD_DATA[row][column]), True, WHITE)
+        textRectObj = textSurf.get_rect()
+        textRectObj.topleft=(x_coord + (TALE_SIZE/ 4) + movement , y_coord + (TALE_SIZE/4))
+        DISPLAYSURF.blit(textSurf, textRectObj)
+        movement += 1
+    if direction == 'LEFT' and movement < TALE_SIZE:
+
+        pygame.draw.rect(DISPLAYSURF, BLUE, ((x_coord, y_coord),(TALE_SIZE, TALE_SIZE)))
+        pygame.draw.rect(DISPLAYSURF, GREEN, ((x_coord-movement, y_coord), (TALE_SIZE-5,TALE_SIZE-5)))
+        textSurf = BASICFONT.render(str(BOARD_DATA[row][column]), True, WHITE)
+        textRectObj = textSurf.get_rect()
+        textRectObj.topleft=(x_coord + (TALE_SIZE/ 4) - movement , y_coord + (TALE_SIZE/4))
         DISPLAYSURF.blit(textSurf, textRectObj)
         movement += 1
     # Homework if direction is 'UP' substruct the movment from the y_coord
@@ -117,7 +163,14 @@ while True:
             movement = 1
             col_index = int((pos[0] - STARTING_X) / TALE_SIZE)
             row_index = int((pos[1] - STARTING_Y) / TALE_SIZE)
-            print(check_movement(row_index, col_index, BOARD_DATA))
+            print(row_index, col_index)
+            direction = check_movement(row_index, col_index, BOARD_DATA)
+            print(direction)
+            if(direction != None):
+                tale_to_animate_row = row_index
+                tale_to_animate_column = col_index
+            print(tale_to_animate_row, tale_to_animate_column)
+                
     animate(tale_to_animate_row,tale_to_animate_column,direction)
             # row_index = int(pos[1] / BOX_H)
             # col_index = int(pos[0] / BOX_W)
