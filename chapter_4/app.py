@@ -1,9 +1,7 @@
 import pygame, sys
 from pygame.locals import *
 import random, time
-# Homework
-# at the decalartion of the click handler part of the code check if the animation_running variable is true => continue
-# when the animation ends set the variable  animation_running to False
+
 CANVAS_WIDTH = 700
 CANVAS_HEIGHT = 500
 COL_NUMBER = 4
@@ -22,10 +20,10 @@ ORANGE = (255, 128, 0)
 PURPLE = (255, 0, 255)
 CYAN = ( 0, 255, 255)
 animation_running = False
-BOARD_DATA = [   [10,3,14,7],
-                 [5,0,1,4],
-                 [2,8,6,15], 
-                 [11,9,13,12]]
+BOARD_DATA = [   [1,2,3,4],
+                 [5,6,7,8],
+                 [9,10,11,12], 
+                 [13,14,0,15]]
 pygame.init()
 clock = pygame.time.Clock()
 
@@ -60,7 +58,6 @@ def draw_board(board_data):
                 textRectObj = textSurf.get_rect()
                 textRectObj.topleft=(drawing_x + (TALE_SIZE/ 4)  , drawing_y + (TALE_SIZE/4) )
                 DISPLAYSURF.blit(textSurf, textRectObj)
-                print(board_data[x][y])
             drawing_x += TALE_SIZE
         drawing_y += TALE_SIZE
 draw_board(board_data=BOARD_DATA)
@@ -94,7 +91,7 @@ def animate(row, column, direction):
         if direction == 'RIGHT':
             BOARD_DATA[row][column+1] = BOARD_DATA[row][column]
             BOARD_DATA[row][column] = 0
-                
+        print(check_data(BOARD_DATA))
         tale_to_animate_column = None
         tale_to_animate_row = None
         direction = None
@@ -136,9 +133,18 @@ def animate(row, column, direction):
         textRectObj.topleft=(x_coord + (TALE_SIZE/ 4) - movement , y_coord + (TALE_SIZE/4))
         DISPLAYSURF.blit(textSurf, textRectObj)
         movement += 5
-    # Homework if direction is 'UP' substruct the movment from the y_coord
-    # add move 'Left'
-    # add move 'Right'
+
+def check_data(board_data):
+    correct_number = 1
+    for row in range(0, len(board_data)):
+        for col in range(0, len(board_data[row])):
+            if(row == ROW_NUMBER - 1 and col == COL_NUMBER - 1):
+                return True
+            current_element = board_data[row][col]
+            if(current_element != correct_number):
+                return False
+            correct_number += 1
+    return True
 
 def check_movement(row, column, board_data):
     # check up
@@ -170,24 +176,11 @@ while True:
             movement = 1
             col_index = int((pos[0] - STARTING_X) / TALE_SIZE)
             row_index = int((pos[1] - STARTING_Y) / TALE_SIZE)
-            print(row_index, col_index)
             direction = check_movement(row_index, col_index, BOARD_DATA)
-            print(direction)
             if(direction != None):
                 tale_to_animate_row = row_index
                 tale_to_animate_column = col_index
-            print(tale_to_animate_row, tale_to_animate_column)
                 
     animate(tale_to_animate_row,tale_to_animate_column,direction)
-            # row_index = int(pos[1] / BOX_H)
-            # col_index = int(pos[0] / BOX_W)
-            # HMRK
-            # show the shape
-            # show_shape(row_index, col_index)
-            # pygame.time.delay(2000)
-            # Find the data for the shape in the board data
-            # Search by row index and column index
-            # Find the x1, y1, x2 and y2 using the formulas 
-            # Draw the shape on the screen
-            # check_combination
+          
     pygame.display.update()
