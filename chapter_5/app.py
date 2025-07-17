@@ -30,7 +30,7 @@ REDRECT = pygame.Rect(XMARGIN, YMARGIN + BUTTONSIZE + BUTTONGAPSIZE,
 BUTTONSIZE, BUTTONSIZE)
 GREENRECT = pygame.Rect(XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, YMARGIN + 
 BUTTONSIZE + BUTTONGAPSIZE, BUTTONSIZE, BUTTONSIZE)
-
+WAITING_TIME = 500
 
 DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 pygame.draw.rect(DISPLAYSURF, BLUE, ((XMARGIN, YMARGIN),(BUTTONSIZE,BUTTONSIZE)))
@@ -63,12 +63,12 @@ def random_moves(amount_of_random_moves):
 
 def lighting_squares(array_of_random_moves):
     for x in range(0, len(array_of_random_moves)):
-        pygame.time.wait(1000)
+        pygame.time.wait(WAITING_TIME)
         random_move = array_of_random_moves[x]
         if random_move == 1:
             pygame.draw.rect(DISPLAYSURF, BRIGHTBLUE, ((XMARGIN, YMARGIN),(BUTTONSIZE,BUTTONSIZE)))
             pygame.display.update()
-            pygame.time.wait(1000)
+            pygame.time.wait(WAITING_TIME)
             pygame.draw.rect(DISPLAYSURF, BLUE, ((XMARGIN, YMARGIN),(BUTTONSIZE,BUTTONSIZE)))
             pygame.display.update()
 
@@ -78,7 +78,7 @@ def lighting_squares(array_of_random_moves):
                     YMARGIN), 
                     (BUTTONSIZE,BUTTONSIZE)))
             pygame.display.update()
-            pygame.time.wait(1000)
+            pygame.time.wait(WAITING_TIME)
             pygame.draw.rect(DISPLAYSURF, GREEN,
                   ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE,
                     YMARGIN), 
@@ -89,7 +89,7 @@ def lighting_squares(array_of_random_moves):
                                               BUTTONSIZE + BUTTONGAPSIZE),
                                               (BUTTONSIZE,BUTTONSIZE)))
             pygame.display.update()
-            pygame.time.wait(1000)
+            pygame.time.wait(WAITING_TIME)
             pygame.draw.rect(DISPLAYSURF, YELLOW, ((XMARGIN, YMARGIN +
                                               BUTTONSIZE + BUTTONGAPSIZE),
                                               (BUTTONSIZE,BUTTONSIZE)))
@@ -112,4 +112,24 @@ while True:
             pygame.quit()
             sys.exit()
 
+        if event.type == MOUSEBUTTONDOWN:
+            mouse_pos = event.pos
+            mouse_x = mouse_pos[0]
+            mouse_y = mouse_pos[1]
+            if ((mouse_x >= XMARGIN and mouse_x <= XMARGIN + BUTTONSIZE)
+                and (mouse_y >= YMARGIN and mouse_y <= YMARGIN + BUTTONSIZE)):
+                print('You clicked on the first square')
+            if ((mouse_x >= XMARGIN + BUTTONSIZE + BUTTONGAPSIZE
+                 and mouse_x <= XMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE) 
+                 and (mouse_y >= YMARGIN  and mouse_y <= YMARGIN + BUTTONSIZE )):
+                                                                     
+                print('You clicked on the second square')
+            # Do for the remaining two squares
+            if ((mouse_x >= XMARGIN and mouse_x <= XMARGIN + BUTTONSIZE) 
+                 and (mouse_y >= YMARGIN + BUTTONGAPSIZE + BUTTONSIZE and mouse_y <= YMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE)):
+                print('You clicked on the third square')
+            if ((mouse_x >= XMARGIN + BUTTONGAPSIZE * 2 + BUTTONSIZE and mouse_x <= XMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE)
+                 and (mouse_y >= YMARGIN + BUTTONSIZE + BUTTONGAPSIZE and mouse_y <= YMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE)):
+                print('You clicked on the fourth square')
+            print(mouse_pos)
     pygame.display.update()
