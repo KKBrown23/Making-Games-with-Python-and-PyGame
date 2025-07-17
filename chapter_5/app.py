@@ -1,6 +1,11 @@
 import random, sys, time, pygame
 from pygame.locals import *
 
+
+# Homework
+# show a pop-up message when the user gets the move wrong and the game restarts
+# make another function that will take the move of the user and light the square that the user clicked
+# and then turn it off again after half a second
 FPS = 30
 WINDOWWIDTH = 1000
 WINDOWHEIGHT = 800
@@ -44,22 +49,28 @@ pygame.draw.rect(DISPLAYSURF, YELLOW, ((XMARGIN, YMARGIN +
 pygame.draw.rect(DISPLAYSURF, RED, ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, 
                                            YMARGIN + BUTTONSIZE + BUTTONGAPSIZE),(BUTTONSIZE,BUTTONSIZE)))
 pygame.init()
+array_of_random_moves = []
+current_counter = 0
+level = 3
+level_label = pygame.font.Font('freesansbold.ttf', 32)
+textSurfaceObj = level_label.render(f'Level: {level}', True, GREEN, BLUE)
+textRectObj = textSurfaceObj.get_rect()
+textRectObj.center = (100, 15)
 clock = pygame.time.Clock()
 pygame.display.update()
 
-# Input: the amount of random moves
-# Calculations: Make a loop that repeats as many times as the amount
-#                   for each repeat:
-#                       generate a random number then add to the array  
-#                       range should be 1-4
-# Output: Array of random moves
-array_of_random_moves = []
 
-def random_moves(amount_of_random_moves):
-    for x in range(0, amount_of_random_moves):
+def get_random_moves():
+    global level
+    random_moves = []
+    for x in range(0, level):
         random_number = random.randint(1,4)
-        array_of_random_moves.append(random_number)
-    return array_of_random_moves
+        random_moves.append(random_number)
+    return random_moves
+def update_level_label(level):
+    global textSurfaceObj
+    textSurfaceObj = level_label.render(f'Level: {level}', True, GREEN, BLUE)
+    
 
 def lighting_squares(array_of_random_moves):
     for x in range(0, len(array_of_random_moves)):
@@ -103,9 +114,55 @@ def lighting_squares(array_of_random_moves):
             pygame.draw.rect(DISPLAYSURF, RED, ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, 
                                            YMARGIN + BUTTONSIZE + BUTTONGAPSIZE),(BUTTONSIZE,BUTTONSIZE)))
             pygame.display.update()
-lighting_squares(random_moves(5))
+array_of_random_moves = get_random_moves()
+lighting_squares(array_of_random_moves)
+def detect_move(mouse_pos):
+    mouse_x = mouse_pos[0]
+    mouse_y = mouse_pos[1]
+    if ((mouse_x >= XMARGIN and mouse_x <= XMARGIN + BUTTONSIZE)
+        and (mouse_y >= YMARGIN and mouse_y <= YMARGIN + BUTTONSIZE)):
+        return 1
+    if ((mouse_x >= XMARGIN + BUTTONSIZE + BUTTONGAPSIZE
+            and mouse_x <= XMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE) 
+            and (mouse_y >= YMARGIN  and mouse_y <= YMARGIN + BUTTONSIZE )):
+                                                                
+        return 2
+        # Do for the remaining two squares
+    if ((mouse_x >= XMARGIN and mouse_x <= XMARGIN + BUTTONSIZE) 
+            and (mouse_y >= YMARGIN + BUTTONGAPSIZE + BUTTONSIZE and mouse_y <= YMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE)):
+        return 3
+    if ((mouse_x >= XMARGIN + BUTTONGAPSIZE * 2 + BUTTONSIZE and mouse_x <= XMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE)
+            and (mouse_y >= YMARGIN + BUTTONSIZE + BUTTONGAPSIZE and mouse_y <= YMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE)):
+        return 4
+
+def restart():
+    global level, current_counter, array_of_random_moves
+    level = 3
+    current_counter = 0 
+    array_of_random_moves = get_random_moves()
+    lighting_squares(array_of_random_moves)
+
+def check_move(user_move):
+    global current_counter
+    
+    if(array_of_random_moves[current_counter] == user_move):
+        current_counter += 1
+    else:
+        # TODO pop up a windows showing that the game is restarting
+        restart()
+    if(current_counter == len(array_of_random_moves)):
+        print("You won")
+        go_next_level()  
+def go_next_level():
+    global level, current_counter, array_of_random_moves
+    current_counter = 0 
+    level += 1
+    array_of_random_moves = get_random_moves()
+    update_level_label(level)
+    lighting_squares(array_of_random_moves)
 while True:
     clock.tick(FPS)
+    DISPLAYSURF.blit(textSurfaceObj, textRectObj)
 
     for event in pygame.event.get():
         if(event.type == QUIT):
@@ -114,22 +171,7 @@ while True:
 
         if event.type == MOUSEBUTTONDOWN:
             mouse_pos = event.pos
-            mouse_x = mouse_pos[0]
-            mouse_y = mouse_pos[1]
-            if ((mouse_x >= XMARGIN and mouse_x <= XMARGIN + BUTTONSIZE)
-                and (mouse_y >= YMARGIN and mouse_y <= YMARGIN + BUTTONSIZE)):
-                print('You clicked on the first square')
-            if ((mouse_x >= XMARGIN + BUTTONSIZE + BUTTONGAPSIZE
-                 and mouse_x <= XMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE) 
-                 and (mouse_y >= YMARGIN  and mouse_y <= YMARGIN + BUTTONSIZE )):
-                                                                     
-                print('You clicked on the second square')
-            # Do for the remaining two squares
-            if ((mouse_x >= XMARGIN and mouse_x <= XMARGIN + BUTTONSIZE) 
-                 and (mouse_y >= YMARGIN + BUTTONGAPSIZE + BUTTONSIZE and mouse_y <= YMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE)):
-                print('You clicked on the third square')
-            if ((mouse_x >= XMARGIN + BUTTONGAPSIZE * 2 + BUTTONSIZE and mouse_x <= XMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE)
-                 and (mouse_y >= YMARGIN + BUTTONSIZE + BUTTONGAPSIZE and mouse_y <= YMARGIN + BUTTONSIZE * 2 + BUTTONGAPSIZE)):
-                print('You clicked on the fourth square')
-            print(mouse_pos)
+            user_move = detect_move(mouse_pos)
+            # TODO: light clicked squar up
+            check_move(user_move)
     pygame.display.update()
