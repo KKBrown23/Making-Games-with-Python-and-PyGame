@@ -70,50 +70,52 @@ def get_random_moves():
 def update_level_label(level):
     global textSurfaceObj
     textSurfaceObj = level_label.render(f'Level: {level}', True, GREEN, BLUE)
-    
 
-def lighting_squares(array_of_random_moves):
-    for x in range(0, len(array_of_random_moves)):
-        pygame.time.wait(WAITING_TIME)
-        random_move = array_of_random_moves[x]
-        if random_move == 1:
+def light_square(user_move):
+    if user_move == 1:
             pygame.draw.rect(DISPLAYSURF, BRIGHTBLUE, ((XMARGIN, YMARGIN),(BUTTONSIZE,BUTTONSIZE)))
             pygame.display.update()
             pygame.time.wait(WAITING_TIME)
             pygame.draw.rect(DISPLAYSURF, BLUE, ((XMARGIN, YMARGIN),(BUTTONSIZE,BUTTONSIZE)))
             pygame.display.update()
 
-        if random_move == 2:
-            pygame.draw.rect(DISPLAYSURF, BRIGHTGREEN,
-                  ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE,
-                    YMARGIN), 
-                    (BUTTONSIZE,BUTTONSIZE)))
-            pygame.display.update()
-            pygame.time.wait(WAITING_TIME)
-            pygame.draw.rect(DISPLAYSURF, GREEN,
-                  ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE,
-                    YMARGIN), 
-                    (BUTTONSIZE,BUTTONSIZE)))
-            pygame.display.update()
-        if random_move == 3:
-            pygame.draw.rect(DISPLAYSURF, BRIGHTYELLOW, ((XMARGIN, YMARGIN +
-                                              BUTTONSIZE + BUTTONGAPSIZE),
-                                              (BUTTONSIZE,BUTTONSIZE)))
-            pygame.display.update()
-            pygame.time.wait(WAITING_TIME)
-            pygame.draw.rect(DISPLAYSURF, YELLOW, ((XMARGIN, YMARGIN +
-                                              BUTTONSIZE + BUTTONGAPSIZE),
-                                              (BUTTONSIZE,BUTTONSIZE)))
+    if user_move == 2:
+        pygame.draw.rect(DISPLAYSURF, BRIGHTGREEN,
+                ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE,
+                YMARGIN), 
+                (BUTTONSIZE,BUTTONSIZE)))
+        pygame.display.update()
+        pygame.time.wait(WAITING_TIME)
+        pygame.draw.rect(DISPLAYSURF, GREEN,
+                ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE,
+                YMARGIN), 
+                (BUTTONSIZE,BUTTONSIZE)))
+        pygame.display.update()
+    if user_move == 3:
+        pygame.draw.rect(DISPLAYSURF, BRIGHTYELLOW, ((XMARGIN, YMARGIN +
+                                            BUTTONSIZE + BUTTONGAPSIZE),
+                                            (BUTTONSIZE,BUTTONSIZE)))
+        pygame.display.update()
+        pygame.time.wait(WAITING_TIME)
+        pygame.draw.rect(DISPLAYSURF, YELLOW, ((XMARGIN, YMARGIN +
+                                            BUTTONSIZE + BUTTONGAPSIZE),
+                                            (BUTTONSIZE,BUTTONSIZE)))
 
-            pygame.display.update()
-        if random_move == 4:
-            pygame.draw.rect(DISPLAYSURF, BRIGHTRED, ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, 
-                                           YMARGIN + BUTTONSIZE + BUTTONGAPSIZE),(BUTTONSIZE,BUTTONSIZE)))
-            pygame.display.update()
-            pygame.time.wait(1000)
-            pygame.draw.rect(DISPLAYSURF, RED, ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, 
-                                           YMARGIN + BUTTONSIZE + BUTTONGAPSIZE),(BUTTONSIZE,BUTTONSIZE)))
-            pygame.display.update()
+        pygame.display.update()
+    if user_move == 4:
+        pygame.draw.rect(DISPLAYSURF, BRIGHTRED, ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, 
+                                        YMARGIN + BUTTONSIZE + BUTTONGAPSIZE),(BUTTONSIZE,BUTTONSIZE)))
+        pygame.display.update()
+        pygame.time.wait(1000)
+        pygame.draw.rect(DISPLAYSURF, RED, ((XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, 
+                                        YMARGIN + BUTTONSIZE + BUTTONGAPSIZE),(BUTTONSIZE,BUTTONSIZE)))
+        pygame.display.update()
+
+def lighting_squares(array_of_random_moves):
+    for x in range(0, len(array_of_random_moves)):
+        pygame.time.wait(WAITING_TIME)
+        random_move = array_of_random_moves[x]
+        light_square(random_move)
 array_of_random_moves = get_random_moves()
 lighting_squares(array_of_random_moves)
 def detect_move(mouse_pos):
@@ -138,10 +140,11 @@ def detect_move(mouse_pos):
 def restart():
     global level, current_counter, array_of_random_moves
     level = 3
+    update_level_label(level)
     current_counter = 0 
     array_of_random_moves = get_random_moves()
     lighting_squares(array_of_random_moves)
-
+    print("restarting")
 def check_move(user_move):
     global current_counter
     
@@ -160,6 +163,8 @@ def go_next_level():
     array_of_random_moves = get_random_moves()
     update_level_label(level)
     lighting_squares(array_of_random_moves)
+
+        
 while True:
     clock.tick(FPS)
     DISPLAYSURF.blit(textSurfaceObj, textRectObj)
@@ -173,5 +178,6 @@ while True:
             mouse_pos = event.pos
             user_move = detect_move(mouse_pos)
             # TODO: light clicked squar up
+            light_square(user_move)
             check_move(user_move)
     pygame.display.update()
